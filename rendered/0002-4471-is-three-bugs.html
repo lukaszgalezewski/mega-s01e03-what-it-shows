@@ -70,6 +70,13 @@
       tickets carry the fixes.
     </p>
 
+    <h2>Engineering's own update on #4471, closed 05 Oct</h2>
+    <ul>
+      <li><code>parser</code> — <strong>fixed</strong>: <code>fix(dates): parse dd/mm for eu locales</code>. Ticket A closed as completed.</li>
+      <li><code>hint</code> — <strong>won't fix</strong>: the <code>booking-v3</code> form was retired, so the mismatch no longer applies. Not a code fix; ticket B closed as not planned.</li>
+      <li><code>one-day move</code> is not part of this update. It is a different symptom from both, still open as ticket C.</li>
+    </ul>
+
     <h2>Consequences</h2>
     <ul>
       <li>Engineering can ship the <code>hint</code> fix (read the form the way its own hint says) without it hiding behind the <code>parser</code> fix (locale-aware parsing).</li>
@@ -77,7 +84,7 @@
       <li>#4471's "known. one issue, one fix queued" is no longer accurate and should be corrected to point at the three tickets.</li>
     </ul>
 
-    <p class="stamp">desk ref <b>DR-BV55-K8SF</b></p>
+    <p class="stamp">desk ref <b>DR-ZWYX-0ZVV</b></p>
   </main>
   <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
 </div>

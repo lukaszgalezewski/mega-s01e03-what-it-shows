@@ -4,7 +4,7 @@ title: '0002 · #4471 is three bugs, not one'
 owner: support desk
 status: accepted
 reviewed: 2026-10-29
-signature: lukaszgalezewski
+signature: v1.eyJzdWIiOiIzODMwIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMyNzUxMzAsImV4cCI6MTc5MzM2MTUzMH0.J9DMn4KxSefblJv05Rhh6IT2LHhwZ2t--76xn6-eY2E
 ---
 
 <script>
@@ -44,6 +44,14 @@ cause-matcher placed them by channel and form, never by what the report says.
 Open one ticket per cause above, each carrying its own count, instead of leaving all three under
 #4471's single "known" status. #4471 stays as the record of the merge; the three new tickets carry
 the fixes.
+
+## Engineering's own update on #4471, closed 05 Oct
+
+- `parser` — **fixed**: `fix(dates): parse dd/mm for eu locales`. Ticket A closed as completed.
+- `hint` — **won't fix**: the `booking-v3` form was retired, so the mismatch no longer applies.
+  Not a code fix; ticket B closed as not planned.
+- `one-day move` is not part of this update. It is a different symptom from both, still open as
+  ticket C.
 
 ## Consequences
 
