@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>0002 · #4471 is three bugs, not one · support kb</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+    --accent: #2f6f5e; --warn: #b4501f; --warn-bg: #fbeee6; --note-bg: #eef5f2;
+    --mono: ui-monospace, 'Cascadia Code', Menlo, monospace;
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, sans-serif; }
+  .kb { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; }
+  .crumb { font: 0.8rem var(--mono); text-decoration: none; color: var(--muted); }
+  h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+  th, td { border-bottom: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+  code { font-family: var(--mono); font-size: 0.88em; }
+  a { color: var(--accent); }
+  aside.warn { border-left: 4px solid var(--warn); background: var(--warn-bg); padding: 0.5rem 1rem; margin: 1rem 0; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .stamp { margin: 2rem 0 0; font: 0.85rem var(--mono); color: var(--muted); }
+  .stamp b { color: var(--accent); letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<div class="kb">
+  <header>
+    <a class="crumb" href="/kb">support desk · kb</a>
+    <h1>0002 · #4471 is three bugs, not one</h1>
+    <p class="meta">
+      <span>owner <b>support desk</b></span>
+      <span class="status accepted">accepted</span>
+      <span>reviewed 2026-10-29 · 0 days ago</span>
+    </p>
+  </header>
+  <main>
+    <p><strong>Date:</strong> 29 October 2026 · <strong>Deciders:</strong> support desk</p>
+
+    <h2>Context</h2>
+    <p>
+      <a href="/kb/incidents/4471">#4471</a> merged 412 reports under one subject and one status:
+      known, one fix queued. Subject-matching dedupe
+      (<a href="/kb/decisions/0001-dedupe-by-subject">decision 0001</a>) is fast, but it does not
+      read the report. <code>src/lib/kb/causes.ts</code> already computes a real cause per report,
+      and <code>CauseTable</code> already flags a second cause inside #4471 as "not this ticket —
+      no ticket of its own." <code>desk-notes.json</code> already footnotes five reports as
+      something else again. Nobody opened tickets for either.
+    </p>
+
+    <aside class="warn">One subject line, three bugs. #4471 as filed covers only the first.</aside>
+
+    <h2>What #4471 actually holds</h2>
+    <table>
+      <thead><tr><th>cause</th><th>reports</th><th>what breaks</th><th>tickets</th></tr></thead>
+      <tbody>
+        <tr><td><code>parser</code></td><td>374</td><td>the shared parser reads every date month-first; a day-first tenant on <code>booking-v2</code> or any non-form channel gets the day and month swapped.</td><td>ticket A</td></tr>
+        <tr><td><code>hint</code></td><td>33</td><td>on <code>booking-v3</code>, the form's own hint tells a day-first tenant's people to type month-first; the form then reads what they typed the tenant's (day-first) way. Same symptom, different code path.</td><td>ticket B</td></tr>
+        <tr><td><code>one-day move</code></td><td>5</td><td>the date is right, only off by a single day; no month/day swap is involved. Flagged in <code>desk-notes.json</code> as <code>oneDayMove</code>, filed under <code>parser</code> by tenant because the automatic cause-matcher never sees it.</td><td>ticket C</td></tr>
+      </tbody>
+    </table>
+    <p>374 + 33 + 5 = 412: every report in #4471, placed once.</p>
+
+    <h2>Decision</h2>
+    <p>
+      Open one ticket per cause above, each carrying its own count, instead of leaving all three
+      under #4471's single "known" status. #4471 stays as the record of the merge; the three new
+      tickets carry the fixes.
+    </p>
+
+    <h2>Consequences</h2>
+    <ul>
+      <li>Engineering can ship the <code>hint</code> fix (read the form the way its own hint says) without it hiding behind the <code>parser</code> fix (locale-aware parsing).</li>
+      <li>The five <code>oneDayMove</code> reports stop being miscounted as evidence for the month/day swap; they get looked at as their own, much smaller, problem.</li>
+      <li>#4471's "known. one issue, one fix queued" is no longer accurate and should be corrected to point at the three tickets.</li>
+    </ul>
+
+    <p class="stamp">desk ref <b>DR-BV55-K8SF</b></p>
+  </main>
+  <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+</div>
+</body>
+</html>

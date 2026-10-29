@@ -1,0 +1,55 @@
+---
+layout: runbook
+title: '0002 · #4471 is three bugs, not one'
+owner: support desk
+status: accepted
+reviewed: 2026-10-29
+signature: lukaszgalezewski
+---
+
+<script>
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+**Date:** 29 October 2026 · **Deciders:** support desk
+
+## Context
+
+[#4471](/kb/incidents/4471) merged 412 reports under one subject and one status: known, one fix
+queued. Subject-matching dedupe ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) is fast,
+but it does not read the report. `src/lib/kb/causes.ts` already computes a real cause per report,
+and `CauseTable` already flags a second cause inside #4471 as "not this ticket — no ticket of its
+own." `desk-notes.json` already footnotes five reports as something else again. Nobody opened
+tickets for either.
+
+<Callout kind="warn">
+One subject line, three bugs. #4471 as filed covers only the first.
+</Callout>
+
+## What #4471 actually holds
+
+| cause | reports | what breaks | tickets |
+|---|---|---|---|
+| parser | 374 | the shared parser reads every date month-first; a day-first tenant on `booking-v2` or any non-form channel gets the day and month swapped. | ticket A |
+| hint | 33 | on `booking-v3`, the form's own hint tells a day-first tenant's people to type month-first; the form then reads what they typed the tenant's (day-first) way. Same symptom, different code path. | ticket B |
+| one-day move | 5 | the date is right, only off by a single day; no month/day swap is involved. Flagged in `desk-notes.json` as `oneDayMove`, filed under `parser` by tenant because the automatic cause-matcher never sees it. | ticket C |
+
+374 + 33 + 5 = 412: every report in #4471, placed once.
+
+## Decision
+
+Open one ticket per cause above, each carrying its own count, instead of leaving all three under
+#4471's single "known" status. #4471 stays as the record of the merge; the three new tickets carry
+the fixes.
+
+## Consequences
+
+- Engineering can ship the `hint` fix (read the form the way its own hint says) without it hiding
+  behind the `parser` fix (locale-aware parsing).
+- The five `oneDayMove` reports stop being miscounted as evidence for the month/day swap; they get
+  looked at as their own, much smaller, problem.
+- `#4471`'s "known. one issue, one fix queued" is no longer accurate and should be corrected to
+  point at the three tickets.
+
+<RenderStamp {signature} />
