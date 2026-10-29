@@ -56,12 +56,12 @@
     <table>
       <thead><tr><th>cause</th><th>reports</th><th>what breaks</th><th>tickets</th></tr></thead>
       <tbody>
-        <tr><td><code>parser</code></td><td>374</td><td>the shared parser reads every date month-first; a day-first tenant on <code>booking-v2</code> or any non-form channel gets the day and month swapped.</td><td>ticket A</td></tr>
+        <tr><td><code>parser</code></td><td>379</td><td>the shared parser reads every date month-first; a day-first tenant on <code>booking-v2</code> or any non-form channel gets the day and month swapped. Counted the way <code>groupByCause()</code> counts it: includes the 5 <code>oneDayMove</code> reports below, which the cause-matcher still sorts in here.</td><td>ticket A</td></tr>
         <tr><td><code>hint</code></td><td>33</td><td>on <code>booking-v3</code>, the form's own hint tells a day-first tenant's people to type month-first; the form then reads what they typed the tenant's (day-first) way. Same symptom, different code path.</td><td>ticket B</td></tr>
-        <tr><td><code>one-day move</code></td><td>5</td><td>the date is right, only off by a single day; no month/day swap is involved. Flagged in <code>desk-notes.json</code> as <code>oneDayMove</code>, filed under <code>parser</code> by tenant because the automatic cause-matcher never sees it.</td><td>ticket C</td></tr>
+        <tr><td><code>one-day move</code></td><td>5</td><td>the date is right, only off by a single day; no month/day swap is involved. Flagged in <code>desk-notes.json</code> as <code>oneDayMove</code>, filed under <code>parser</code> above by the cause-matcher, worth its own ticket because the symptom does not match either bug.</td><td>ticket C</td></tr>
       </tbody>
     </table>
-    <p>374 + 33 + 5 = 412: every report in #4471, placed once.</p>
+    <p>379 + 33 = 412, counted the way the kb itself counts a cause group. The 5 <code>oneDayMove</code> reports are a subset of the 379, not a fourth bucket: still worth their own ticket, because the desk's cause-matcher placed them by channel and form, never by what the report says.</p>
 
     <h2>Decision</h2>
     <p>

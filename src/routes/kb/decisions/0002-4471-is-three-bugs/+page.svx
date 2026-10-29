@@ -31,11 +31,13 @@ One subject line, three bugs. #4471 as filed covers only the first.
 
 | cause | reports | what breaks | tickets |
 |---|---|---|---|
-| parser | 374 | the shared parser reads every date month-first; a day-first tenant on `booking-v2` or any non-form channel gets the day and month swapped. | ticket A |
+| parser | 379 | the shared parser reads every date month-first; a day-first tenant on `booking-v2` or any non-form channel gets the day and month swapped. Counted the way `groupByCause()` counts it: includes the 5 `oneDayMove` reports below, which the cause-matcher still sorts in here. | ticket A |
 | hint | 33 | on `booking-v3`, the form's own hint tells a day-first tenant's people to type month-first; the form then reads what they typed the tenant's (day-first) way. Same symptom, different code path. | ticket B |
-| one-day move | 5 | the date is right, only off by a single day; no month/day swap is involved. Flagged in `desk-notes.json` as `oneDayMove`, filed under `parser` by tenant because the automatic cause-matcher never sees it. | ticket C |
+| one-day move | 5 | the date is right, only off by a single day; no month/day swap is involved. Flagged in `desk-notes.json` as `oneDayMove`, filed under `parser` above by the cause-matcher, worth its own ticket because the symptom does not match either bug. | ticket C |
 
-374 + 33 + 5 = 412: every report in #4471, placed once.
+379 + 33 = 412, counted the way the kb itself counts a cause group. The 5 `oneDayMove` reports are
+a subset of the 379, not a fourth bucket: still worth their own ticket, because the desk's
+cause-matcher placed them by channel and form, never by what the report says.
 
 ## Decision
 
